@@ -13,7 +13,7 @@
     <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"></script>
 
     <style>
-    .paging strong {      
+    .paging strong {
       padding: 0 25px;
     }
     .paging{
@@ -32,5 +32,5 @@
 // var_dump(is_file('/public/js/init-alpine.js'));
  ?>
 <div style="padding-left:250px">
-  <h3><a href="./list_board?page=1"><img src="/public/image/logo.svg"/></a></h3>
+  <h3><a href="/board/list_board?page=1"><img src="/public/image/logo.svg"/></a></h3>
 <body>

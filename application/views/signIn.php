@@ -39,6 +39,7 @@
       $memberInfo = $result->fetch_array(MYSQLI_ASSOC);
       $_SESSION['memberID'] = $memberInfo['memberID'];
       $_SESSION['nickName'] = $memberInfo['nickName'];
+      
       Header("Location:./index.php");//메인페이지로 이동
     }
   }

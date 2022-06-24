@@ -21,6 +21,40 @@ class Board_model extends CI_Model {
       return $memberInfo;
     }
 
+    public function getReply($param){
+      $boardID = $param['boardID'];//댓글 종속 게시글 번호
+
+      $sql = "SELECT * FROM reply WHERE boardID = {$boardID}";
+      $result = $this -> db -> query($sql);
+      $replyInfo = $result -> result_array();
+      return $replyInfo;
+    }
+
+    public function getWrite($param){
+      if($param['boardID'] != ''){
+        $boardID = $param['boardID'];
+      }
+      if(isset($boardID)){//게시글 수정일때
+        $sql = "SELECT * FROM board WHERE boardID = {$boardID}";
+        $result = $this -> db -> query($sql);
+        $writeInfo = $result -> row_array();
+      }else{
+        $writeInfo = null;
+      }
+      return $writeInfo;
+
+    }
+
+    public function getDetail($param){//상세 정보 불러오기
+      $boardID = $param['boardID'];
+
+      $sql  = "SELECT boardID, title, m.nickName, b.content ,b.regTime, b.lastUpdate, b.views FROM board b JOIN member m ";
+      $sql .= "ON (b.memberID = m.memberID) WHERE boardID = {$boardID}";
+      $result = $this -> db -> query($sql);
+      $boardInfo = $result -> result_array();
+      return $boardInfo;
+    }
+
     public function getList($param, $type){//리스트 불러오기
       if(isset($param['page'])){
         $page = (int) $param['page'];
@@ -74,9 +108,7 @@ class Board_model extends CI_Model {
       }
       return $boardInfo;
     }
-
     function list($page,$searchKeyword,$searchOption){//리스트 출력을 위한 데이터 쿼리
-
     }
 
     function member() {//member 테이블

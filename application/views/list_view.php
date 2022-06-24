@@ -3,10 +3,10 @@
 
 <div class="w-full mb-8 overflow-hidden rounded-lg shadow-xs">
 <div style="padding-left:250px; padding-right:250px;padding-top:15px;padding-bottom:10px">
-  <a style="padding-left:55px" href="./write.php"><em class='fa fa-pencil-square-o' style='color:gray;font-size:24px;'></em></a>
-  <a style="float:right; margin-right:30px" href="./signOut.php"><em style="color:#CE181E;font-size:24px;" class="fa fa-power-off"></em></a>
-  <a style="float:right; margin-right:30px" href="./signUpForm.php"><em style="color:gray;font-size:24px;" class="fa fa-user"></em></a>
-  <a style="float:right; margin-right:30px" href="./csvOutput.php"><em class="fa fa-download" style="color:gray;font-size:24px;"></em></a>
+  <a style="padding-left:55px" href="/board/write_board"><em class='fa fa-pencil-square-o' style='color:gray;font-size:24px;'></em></a>
+  <a style="float:right; margin-right:30px" href="/board/signOut"><em style="color:#CE181E;font-size:24px;" class="fa fa-power-off"></em></a>
+  <a style="float:right; margin-right:30px" href="/board/signUpForm"><em style="color:gray;font-size:24px;" class="fa fa-user"></em></a>
+  <a style="float:right; margin-right:30px" href="/board/csvOutput"><em class="fa fa-download" style="color:gray;font-size:24px;"></em></a>
 </div>
   <div style="padding-left:250px; padding-right:250px" class="w-full overflow-x-auto">
 		<table class="w-full">
@@ -31,17 +31,16 @@
          ?>
          <tr class='text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800'>
            <th class="th_sty px-4 py-3"><?=$i-(($_GET['page']-1)*10)?></th>
-           <th class="th_sty px-4 py-3"><?=$list_b['title']?></th>
+           <th class="th_sty px-4 py-3"><a href ="./detail_board?boardID=<?=$list_b['boardID']?>"><?=$list_b['title']?></a></th>
            <th class="th_sty px-4 py-3"><?=$list_b['nickName']?></th>
            <th class="th_sty px-4 py-3"><?=$list_b['regTime']?></th>
            <th class="th_sty px-4 py-3"><?=$list_b['views']?></th>
            <td class='th_sty text-gray-500 px-4 py-3 text-sm'>
-             <a href='history.php?boardID={$memberInfo['boardID']}' target = '_blank' onclick='window.open(this.href,'팝업창','width=100, height=100');'>
+             <a href='./history.php?boardID=<?=$list_b['boardID']?>' target = '_blank' onclick='window.open(this.href,'팝업창','width=100, height=100');'>
                <em style='font-size:20px' class='fa fa-history'></em>
              </a>
            </td>
          </tr>
-
        <?php
        $i = $i-1;
        }

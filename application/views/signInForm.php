@@ -35,13 +35,13 @@
 
 <script>
 function test() {
-  if($('input[name=id]').val() == '') {
-      alert("입력해라");
+  if($('input[name=userEmail]').val() == '') {
+      alert("이메일을 입력해주세요.");
       return false;
       // exit;
   }
-  if($('input[name=pw]').val() == '') {
-    alert("입력해라");
+  if($('input[name=userPW]').val() == '') {
+    alert("비밀번호를 입력해주세요.");
     return false;
     // exit;
   }
@@ -53,8 +53,8 @@ $.ajax({
  	success : function(data) {
     if(data.result== false) { //로그인 실패
       echo "로그인 실패";
-    } else {// 성
-      echo "로그인 성곤";
+    } else {// 성공
+      echo "로그인 성공";
     }
    }
  });

@@ -4,9 +4,9 @@ class Board extends CI_Controller {
 
     function __construct() {
         parent::__construct();
-        // $this->load->model(array('test_model', 'board'));
         $this->load->model('board_model');
-        // $this->load->library("pagination");
+        session_start();
+
     }
 
     public function index() {//로그인 페이지
@@ -29,9 +29,6 @@ class Board extends CI_Controller {
         $_SESSION['nickName'] = $aResult[0]['nickName'];
 
         $array['result'] = true;
-        echo $_SESSION['memberID'];
-        echo '&nbsp';
-        echo $_SESSION['nickName'];
       } else {
         $array['result'] = false;
       }
@@ -46,13 +43,79 @@ class Board extends CI_Controller {
       $this->load->view('foot');
     }
 
+    public function write_board(){//작성 및 수정 페이지
+
+      // echo $_GET['boardID'];
+
+      if(isset($_GET['boardID'])){
+        echo "<h4 class='mb-4 text-lg font-semibold text-gray-600 dark:text-gray-300'>MODIFY</h4></div>";
+      }else{
+        echo "<h4 class='mb-4 text-lg font-semibold text-gray-600 dark:text-gray-300'>WRITE</h4></div>";
+      }
+      $aResult['writeInfo'] = $this -> getWrite();
+      $this -> load -> view('write_view',$aResult);
+    }
+
+    public function getWrite(){
+      if(isset($_GET['boardID'])){
+        $param['boardID'] = $this -> input -> get('boardID');
+      }else{
+        $param['boardID'] = '';
+      }
+      $this -> load -> model('board_model');
+      $writeInfo = $this -> board_model -> getWrite($param);
+
+      return $writeInfo;
+    }
+
+    public function detail_board(){//상세 페이지
+
+      // $data = $this->security->xss_clean($data);
+
+      $aResult['boardInfo'] = $this -> getDetail();// return 값엔 boardInfo 가 담김
+      $aResult['replyInfo'] = $this -> getReply();
+      $aResult['session'] = $_SESSION['memberID'];
+
+      if(isset($_SERVER['HTTP_REFERER']) && !empty($_SERVER['HTTP_REFERER'])){//이전 페이지의 url정보
+        $referer=$_SERVER['HTTP_REFERER'];
+      }else{
+        $referer="";
+      }//url을 통한 부정 접근 방지
+
+      if(isset($_GET['boardID']) && (int) $_GET['boardID'] > 0){
+        if($referer == ''){exit("잘못된 접근입니다.");}
+        $this -> load -> view('detail_view',$aResult);//상세 페이지 본문 view파일 호출
+        $this -> load -> view('reply_view',$aResult);
+        }else{
+          echo "<script type='text/javascript'>alert('잘못된 접근입니다.');window.location = './list_board';</script>";
+          exit;
+        }
+    }
+
+    public function replyUp(){//댓글 작성
+      $this -> input -> post('');
+    }
+
     public function list_board(){//리스트 페이지
 
-      $param['page'] = $this->input->get('page', 1);
+      $param['page'] = $this->input->get('page');
       $aResult = $this->getList($param);//getList()가 모델으로부터 가져온 리턴값 뺏어오기
       $this -> load -> view('list_view',$aResult);//리스트 본문
-      // echo $this->pagination->create_links();//pagination 라이브러리 호출
-      // $this -> load -> view('search');//검색 폼
+    }
+
+    public function getReply(){
+
+      $param['boardID'] = $this -> input -> get('boardID');
+      $this -> load -> model('board_model');
+      $replyInfo = $this -> board_model ->getReply($param);
+      return $replyInfo;
+    }
+
+    public function getDetail(){
+      $param['boardID'] = $this -> input -> get('boardID');
+      $this -> load -> model('board_model');
+      $detailInfo = $this-> board_model -> getDetail($param);//board 조회 쿼리 결과값 return
+      return $detailInfo;
     }
 
     public function getList($param){
@@ -64,12 +127,12 @@ class Board extends CI_Controller {
       }
 
       $this -> load -> model('board_model');
-      $this->load->library('pagination');
+      $this -> load-> library('pagination');
 
       $result['list'] = $this->board_model->getList($getParam, 'list');
       $result['count'] = $this->board_model->getList($getParam, 'count');
 
-      // $config['base_url'] = 'http://nasboard.com/board/list_board';
+      //pagination config 설정값
       $config['base_url'] = base_url(). "board/list_board";
       $config['first_url'] = base_url()."board/list_board?page=1";
       $config['num_links'] = 2;//현재페이지 기준 좌우 2개씩 총 5개
@@ -97,11 +160,6 @@ class Board extends CI_Controller {
       $memberInfo['data'] = $data_result;//받아온 배열 형태의 데이터를 $data에 삽입해서 view에서 사용
 
       echo '<br>';
-
-      $this->load->view('head');
       $this->load->view('signUpForm',$memberInfo);
-      $this->load->view('foot');
-
     }
-
 }
